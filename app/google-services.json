@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "502131583100",
+    "firebase_url": "https://clock-178b3.firebaseio.com",
+    "project_id": "clock-178b3",
+    "storage_bucket": "clock-178b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502131583100:android:9f5d76a6db05c5cff9c1f9",
+        "android_client_info": {
+          "package_name": "com.sanjaysgangwar.clock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502131583100-38rf9knu1q5jb3ers6t20gb8oeubnai7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sanjaysgangwar.clock",
+            "certificate_hash": "741e935c1779b36a5c9a4066a3c93cf3adf0291e"
+          }
+        },
+        {
+          "client_id": "502131583100-smiugod40mpicuguqlvlo9q16t89hg1t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJUh5j7xKtqz5_AZUzmBsUnzkdJyiPpCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502131583100-smiugod40mpicuguqlvlo9q16t89hg1t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

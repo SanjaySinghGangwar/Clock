@@ -1,10 +1,14 @@
 package com.sanjaysgangwar.clock;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
@@ -14,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     TextView timeTV, dayTV, dateTV;
     String DAY = null;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +30,21 @@ public class MainActivity extends AppCompatActivity {
 
         //Full Screen App
         View decorView = getWindow().getDecorView();
-        int uiOptions = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        int uiOptions;
+
+        uiOptions = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+
         decorView.setSystemUiVisibility(uiOptions);
 
         updateTime();
@@ -38,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateTime() {
         Date date = new Date();
         int day = date.getDay();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         switch (day) {
             case 1:
