@@ -60,7 +60,7 @@ public class Home extends AppCompatActivity {
     private void updateTime() {
         Date date = new Date();
         int day = date.getDay();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd , yyyy");
 
         switch (day) {
             case 1:
@@ -81,7 +81,7 @@ public class Home extends AppCompatActivity {
             case 6:
                 DAY = "SAT";
                 break;
-            case 7:
+            case 0:
                 DAY = "SUN";
                 break;
 
