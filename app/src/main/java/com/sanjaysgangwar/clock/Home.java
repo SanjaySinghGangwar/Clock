@@ -35,6 +35,13 @@ public class Home extends AppCompatActivity {
         dayTV = findViewById(R.id.DAYTV);
         dateTV = findViewById(R.id.DATETV);
 
+
+        updateTime();
+        updateUI();
+
+    }
+
+    private void updateUI() {
         //Full Screen App
         View decorView = getWindow().getDecorView();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -52,16 +59,13 @@ public class Home extends AppCompatActivity {
                         | SYSTEM_UI_FLAG_FULLSCREEN);
 
         decorView.setSystemUiVisibility(uiOptions);
-
-        updateTime();
-
     }
 
     private void updateTime() {
         Date date = new Date();
         int day = date.getDay();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd , yyyy");
 
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
         switch (day) {
             case 1:
                 DAY = "MON";
@@ -104,8 +108,9 @@ public class Home extends AppCompatActivity {
             @Override
             public void run() {
                 updateTime();
+                updateUI();
             }
-        }, 1000);
+        }, 5000);
     }
 
 
