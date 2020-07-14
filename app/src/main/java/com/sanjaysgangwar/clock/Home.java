@@ -91,14 +91,9 @@ public class Home extends AppCompatActivity {
 
 
         }
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat timeFormatter = new SimpleDateFormat("hh : mm");
 
-        int HH = date.getHours();
-        if (HH > 12) {
-            HH = HH - 12;
-        }
-        int MM = date.getMinutes();
-        String Time = HH + " : " + MM;
-        timeTV.setText(Time);
+        timeTV.setText(timeFormatter.format(date));
         dateTV.setText(formatter.format(date));
         dayTV.setText(DAY);
 
@@ -113,5 +108,20 @@ public class Home extends AppCompatActivity {
         }, 5000);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopClock();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopClock();
+
+    }
+
+    void stopClock() {
+        System.exit(0);
+    }
 }
