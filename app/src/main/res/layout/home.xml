@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="140sp"
+        android:textSize="125sp"
         android:textStyle="bold"
         app:fontFamily="@font/orbitron_black" />
 
