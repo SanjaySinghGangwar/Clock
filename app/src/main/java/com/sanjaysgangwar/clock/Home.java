@@ -1,18 +1,38 @@
 package com.sanjaysgangwar.clock;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.sanjaysgangwar.clock.api.ApiInterface;
+import com.sanjaysgangwar.clock.modelClass.wheatherModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
 import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -24,6 +44,11 @@ import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 public class Home extends AppCompatActivity {
     TextView timeTV, dayTV, dateTV;
     String DAY = null;
+    int temp;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    double currentLongitude;
+    double currentLatitude;
+    String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -35,11 +60,104 @@ public class Home extends AppCompatActivity {
         dayTV = findViewById(R.id.DAYTV);
         dateTV = findViewById(R.id.DATETV);
 
+        //location
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        //onCrate
         updateTime();
         updateUI();
+        //add a flag to set temperature
+        getLocation();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        timeAndDateHandler();
+        whetherHandler();
+    }
+
+    private void timeAndDateHandler() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateTime();
+                updateUI();
+                timeAndDateHandler();
+            }
+        }, 5000);
+    }
+
+    private void whetherHandler() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getLocation();
+                whetherHandler();
+                //SET TEMP TO LAYOUT
+
+            }
+        }, 3600000);
 
     }
+
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            currentLatitude = location.getLatitude();
+                            currentLongitude = location.getLongitude();
+                            Log.e("lastCurrentLatitude", String.valueOf(currentLatitude));
+                            Log.e("lastCurrentLongitude", String.valueOf(currentLongitude));
+                            wheatherApi(currentLatitude, currentLongitude);
+                        } else {
+                            Toast.makeText(Home.this, "Error getting location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+    }
+
+    private void wheatherApi(Double currentLatitude, Double currentLongitude) {
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/")
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit = builder.build();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<wheatherModel> call = apiInterface.getWeather(currentLatitude, currentLongitude, weatherKey);
+        call.enqueue(new Callback<wheatherModel>() {
+            @Override
+            public void onResponse(Call<wheatherModel> call, Response<wheatherModel> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        temp = (int) (response.body().getMain().getTemp() - 273.15);
+                        Toast.makeText(Home.this, "" + temp, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<wheatherModel> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     private void updateUI() {
         //Full Screen App
@@ -59,6 +177,7 @@ public class Home extends AppCompatActivity {
                         | SYSTEM_UI_FLAG_FULLSCREEN);
 
         decorView.setSystemUiVisibility(uiOptions);
+
     }
 
     private void updateTime() {
@@ -97,15 +216,6 @@ public class Home extends AppCompatActivity {
         dateTV.setText(formatter.format(date));
         dayTV.setText(DAY);
 
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateTime();
-                updateUI();
-            }
-        }, 5000);
     }
 
     @Override
