@@ -6,10 +6,24 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@android:color/black"
-    android:foregroundGravity="center"
     android:gravity="center"
     android:orientation="vertical"
+    android:paddingBottom="50dp"
+    android:weightSum="10"
     tools:context=".Home">
+
+
+    <TextView
+        android:id="@+id/tempTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="30dp"
+        android:textColor="@android:color/white"
+        android:textSize="45sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:fontFamily="@font/orbitron_black" />
 
     <TextView
         android:id="@+id/TIMETV"
@@ -52,6 +66,15 @@
             android:textStyle="bold"
             app:fontFamily="@font/orbitron_black" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/Setting"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="left"
+        android:layout_margin="30dp"
+        app:srcCompat="@drawable/ic_baseline_settings_24"
+        tools:ignore="VectorDrawableCompat" />
 
 
 </LinearLayout>

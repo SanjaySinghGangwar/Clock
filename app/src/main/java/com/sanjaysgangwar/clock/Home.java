@@ -2,6 +2,8 @@ package com.sanjaysgangwar.clock;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -10,11 +12,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -24,6 +30,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.sanjaysgangwar.clock.api.ApiInterface;
 import com.sanjaysgangwar.clock.modelClass.wheatherModel;
+import com.sanjaysgangwar.clock.utils.NetworkUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,14 +48,18 @@ import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
-public class Home extends AppCompatActivity {
-    TextView timeTV, dayTV, dateTV;
+public class Home extends AppCompatActivity implements View.OnClickListener {
+    TextView timeTV, dayTV, dateTV, tempTextView;
     String DAY = null;
     int temp;
     FusedLocationProviderClient fusedLocationProviderClient;
     double currentLongitude;
     double currentLatitude;
     String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
+    ImageView Setting;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private String APP_SHARED_PREFS;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -59,6 +70,15 @@ public class Home extends AppCompatActivity {
         timeTV = findViewById(R.id.TIMETV);
         dayTV = findViewById(R.id.DAYTV);
         dateTV = findViewById(R.id.DATETV);
+        Setting = findViewById(R.id.Setting);
+        tempTextView = findViewById(R.id.tempTextView);
+
+
+        Setting.setOnClickListener(this);
+
+        sharedPreferences = Home.this.getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        APP_SHARED_PREFS = "DeskClock";
 
         //location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -66,8 +86,22 @@ public class Home extends AppCompatActivity {
         //onCrate
         updateTime();
         updateUI();
-        //add a flag to set temperature
-        getLocation();
+        weatherUpdate();
+
+
+    }
+
+    private void weatherUpdate() {
+        Toast.makeText(this, "" + (sharedPreferences.getString("weather", "")), Toast.LENGTH_SHORT).show();
+        if ((sharedPreferences.getString("weather", "").equals("on"))) {
+            if (NetworkUtil.isOnline(this)) {
+                getLocation();
+            } else {
+                Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            tempTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -94,7 +128,7 @@ public class Home extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getLocation();
+                weatherUpdate();
                 whetherHandler();
                 //SET TEMP TO LAYOUT
 
@@ -106,8 +140,8 @@ public class Home extends AppCompatActivity {
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
+            ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+            ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
         }
         fusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -116,9 +150,11 @@ public class Home extends AppCompatActivity {
                         if (location != null) {
                             currentLatitude = location.getLatitude();
                             currentLongitude = location.getLongitude();
+                            Toast.makeText(Home.this, "LOC GOT", Toast.LENGTH_SHORT).show();
                             Log.e("lastCurrentLatitude", String.valueOf(currentLatitude));
                             Log.e("lastCurrentLongitude", String.valueOf(currentLongitude));
                             wheatherApi(currentLatitude, currentLongitude);
+
                         } else {
                             Toast.makeText(Home.this, "Error getting location", Toast.LENGTH_SHORT).show();
                         }
@@ -133,6 +169,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void wheatherApi(Double currentLatitude, Double currentLongitude) {
+        Toast.makeText(this, "Inside wea", Toast.LENGTH_SHORT).show();
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create());
@@ -144,8 +181,10 @@ public class Home extends AppCompatActivity {
             public void onResponse(Call<wheatherModel> call, Response<wheatherModel> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
+                        tempTextView.setVisibility(View.VISIBLE);
                         temp = (int) (response.body().getMain().getTemp() - 273.15);
-                        Toast.makeText(Home.this, "" + temp, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Home.this, "Temp " + temp, Toast.LENGTH_LONG).show();
+                        tempTextView.setText(temp + "C");
                     }
                 }
 
@@ -153,7 +192,7 @@ public class Home extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<wheatherModel> call, Throwable t) {
-
+                Log.e("Weather API ", "onFailure: " + t.getLocalizedMessage());
             }
         });
     }
@@ -233,5 +272,49 @@ public class Home extends AppCompatActivity {
 
     void stopClock() {
         System.exit(0);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.Setting:
+                AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+                View v = getLayoutInflater().inflate(R.layout.setting_dialog, null);
+                builder.setView(v);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                Switch weatherSwitch = v.findViewById(R.id.weatherSwitch);
+
+                if ((sharedPreferences.getString("weather", "").equals("on"))) {
+                    weatherSwitch.setChecked(true);
+                } else {
+                    weatherSwitch.setChecked(false);
+                }
+
+                weatherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            if (ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+                                ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
+                            } else {
+                                editor.clear();
+                                editor.putString("weather", "on");
+                                editor.commit();
+                                getLocation();
+                            }
+
+
+                        } else {
+                            editor.clear();
+                            editor.putString("weather", "off");
+                            editor.commit();
+                        }
+                    }
+                });
+
+                break;
+        }
     }
 }

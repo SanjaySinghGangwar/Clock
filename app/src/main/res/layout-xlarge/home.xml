@@ -1,0 +1,95 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".Home">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="8"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tempTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="60dp"
+            android:textColor="@android:color/white"
+            android:textSize="80sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:fontFamily="@font/orbitron_black" />
+
+        <TextView
+            android:id="@+id/TIMETV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="210sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/orbitron_black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/DAYTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="60sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/orbitron_black" />
+
+            <TextView
+                android:id="@+id/DATETV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="60sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/orbitron_black" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left">
+
+        <ImageView
+            android:id="@+id/Setting"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="30dp"
+            app:srcCompat="@drawable/ic_baseline_settings_24"
+            tools:ignore="VectorDrawableCompat" />
+    </FrameLayout>
+
+</LinearLayout>
