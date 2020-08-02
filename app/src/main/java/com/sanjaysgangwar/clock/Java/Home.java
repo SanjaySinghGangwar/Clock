@@ -1,4 +1,4 @@
-package com.sanjaysgangwar.clock;
+package com.sanjaysgangwar.clock.Java;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,6 +28,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.sanjaysgangwar.clock.R;
 import com.sanjaysgangwar.clock.api.ApiInterface;
 import com.sanjaysgangwar.clock.modelClass.wheatherModel;
 import com.sanjaysgangwar.clock.utils.NetworkUtil;

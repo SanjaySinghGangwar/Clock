@@ -10,7 +10,7 @@
     android:orientation="vertical"
     android:paddingBottom="50dp"
     android:weightSum="10"
-    tools:context=".Home">
+    tools:context=".Java.Home">
 
 
     <TextView
