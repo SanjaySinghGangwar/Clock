@@ -93,7 +93,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void weatherUpdate() {
-        Toast.makeText(this, "" + (sharedPreferences.getString("weather", "")), Toast.LENGTH_SHORT).show();
         if ((sharedPreferences.getString("weather", "").equals("on"))) {
             if (NetworkUtil.isOnline(this)) {
                 getLocation();
@@ -151,7 +150,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                         if (location != null) {
                             currentLatitude = location.getLatitude();
                             currentLongitude = location.getLongitude();
-                            Toast.makeText(Home.this, "LOC GOT", Toast.LENGTH_SHORT).show();
                             Log.e("lastCurrentLatitude", String.valueOf(currentLatitude));
                             Log.e("lastCurrentLongitude", String.valueOf(currentLongitude));
                             wheatherApi(currentLatitude, currentLongitude);
@@ -170,7 +168,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void wheatherApi(Double currentLatitude, Double currentLongitude) {
-        Toast.makeText(this, "Inside wea", Toast.LENGTH_SHORT).show();
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create());
@@ -184,8 +181,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     if (response.body() != null) {
                         tempTextView.setVisibility(View.VISIBLE);
                         temp = (int) (response.body().getMain().getTemp() - 273.15);
-                        Toast.makeText(Home.this, "Temp " + temp, Toast.LENGTH_LONG).show();
-                        tempTextView.setText(temp + "C");
+                        tempTextView.setText(temp + "°C");
                     }
                 }
 
@@ -304,13 +300,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                                 editor.putString("weather", "on");
                                 editor.commit();
                                 getLocation();
+                                alertDialog.dismiss();
                             }
 
 
                         } else {
+                            tempTextView.setVisibility(View.INVISIBLE);
                             editor.clear();
                             editor.putString("weather", "off");
                             editor.commit();
+                            alertDialog.dismiss();
                         }
                     }
                 });

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Desk Clock</string>
+    <string name="weather">Weather</string>
 </resources>
