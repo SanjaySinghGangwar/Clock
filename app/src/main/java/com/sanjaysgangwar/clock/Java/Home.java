@@ -139,8 +139,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
 
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
         }
         fusedLocationProviderClient.getLastLocation()
@@ -268,7 +267,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     void stopClock() {
-        System.exit(0);
+        // System.exit(0);
     }
 
     @Override
@@ -292,9 +291,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
-                            if (ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+                            if (ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
+                                alertDialog.dismiss();
                             } else {
                                 editor.clear();
                                 editor.putString("weather", "on");
@@ -313,6 +312,23 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                         }
                     }
                 });
+
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+            case 10:
+                editor.clear();
+                editor.putString("weather", "on");
+                editor.commit();
+                getLocation();
 
                 break;
         }

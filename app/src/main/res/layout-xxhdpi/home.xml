@@ -18,7 +18,7 @@
         android:layout_marginRight="30dp"
         android:layout_weight="1"
         android:textColor="@android:color/white"
-        android:textSize="25sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         android:visibility="invisible"
         app:fontFamily="@font/orbitron_black" />
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="115sp"
+            android:textSize="135sp"
             android:textStyle="bold"
             app:fontFamily="@font/orbitron_black" />
 
@@ -60,7 +60,7 @@
                 android:layout_marginRight="30dp"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="25sp"
+                android:textSize="35sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
 
@@ -72,7 +72,7 @@
                 android:layout_marginLeft="30dp"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="25sp"
+                android:textSize="35sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
         </LinearLayout>
