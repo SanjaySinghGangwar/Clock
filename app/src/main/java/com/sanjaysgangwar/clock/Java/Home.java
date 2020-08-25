@@ -323,13 +323,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-
             case 10:
                 editor.clear();
                 editor.putString("weather", "on");
                 editor.commit();
                 getLocation();
-
                 break;
         }
     }

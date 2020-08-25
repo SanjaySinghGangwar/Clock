@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "502131583100",
-    "firebase_url": "https://clock-178b3.firebaseio.com",
-    "project_id": "clock-178b3",
-    "storage_bucket": "clock-178b3.appspot.com"
+    "project_number": "794511230583",
+    "firebase_url": "https://common-apps-c8335.firebaseio.com",
+    "project_id": "common-apps-c8335",
+    "storage_bucket": "common-apps-c8335.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:502131583100:android:9f5d76a6db05c5cff9c1f9",
+        "mobilesdk_app_id": "1:794511230583:android:6e937273b2635e59fb6872",
         "android_client_info": {
           "package_name": "com.sanjaysgangwar.clock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "502131583100-38rf9knu1q5jb3ers6t20gb8oeubnai7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sanjaysgangwar.clock",
-            "certificate_hash": "741e935c1779b36a5c9a4066a3c93cf3adf0291e"
-          }
-        },
-        {
-          "client_id": "502131583100-smiugod40mpicuguqlvlo9q16t89hg1t.apps.googleusercontent.com",
+          "client_id": "794511230583-aofijg2r4ur2c91im2tn8a3toln0jbt5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAJUh5j7xKtqz5_AZUzmBsUnzkdJyiPpCE"
+          "current_key": "AIzaSyD2Ff25FxMvI6A547ps3oof40VVxpxz4Uk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "502131583100-smiugod40mpicuguqlvlo9q16t89hg1t.apps.googleusercontent.com",
+              "client_id": "794511230583-aofijg2r4ur2c91im2tn8a3toln0jbt5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
