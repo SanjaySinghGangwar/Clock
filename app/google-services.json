@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:794511230583:android:2c0172725c22a5a4fb6872",
+        "android_client_info": {
+          "package_name": "com.hgnis.reader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794511230583-aofijg2r4ur2c91im2tn8a3toln0jbt5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Ff25FxMvI6A547ps3oof40VVxpxz4Uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794511230583-aofijg2r4ur2c91im2tn8a3toln0jbt5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:794511230583:android:6e937273b2635e59fb6872",
         "android_client_info": {
           "package_name": "com.sanjaysgangwar.clock"

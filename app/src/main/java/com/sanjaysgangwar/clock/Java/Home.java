@@ -92,6 +92,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+
     private void weatherUpdate() {
         if ((sharedPreferences.getString("weather", "").equals("on"))) {
             if (NetworkUtil.isOnline(this)) {
