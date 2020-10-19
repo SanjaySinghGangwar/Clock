@@ -25,7 +25,7 @@
             android:paddingRight="15dp"
             android:text="50o c"
             android:textColor="@android:color/white"
-            android:textSize="30sp"
+            android:textSize="45sp"
             android:textStyle="bold"
             android:visibility="invisible"
             app:fontFamily="@font/orbitron_black" />
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:text="88:99"
             android:textColor="@android:color/white"
-            android:textSize="130sp"
+            android:textSize="175dp"
             android:textStyle="bold"
             app:fontFamily="@font/orbitron_black" />
 
@@ -69,7 +69,7 @@
                 android:gravity="center"
                 android:text="Thurs"
                 android:textColor="@android:color/white"
-                android:textSize="35sp"
+                android:textSize="40sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
 
@@ -77,12 +77,12 @@
                 android:id="@+id/DATETV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginLeft="30dp"
                 android:gravity="center"
                 android:text="October 55 ,2020"
                 android:textColor="@android:color/white"
-                android:textSize="35sp"
+                android:textSize="40sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
         </LinearLayout>

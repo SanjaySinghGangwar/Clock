@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,15 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.sanjaysgangwar.clock.R;
 import com.sanjaysgangwar.clock.api.ApiInterface;
 import com.sanjaysgangwar.clock.modelClass.wheatherModel;
@@ -61,20 +61,29 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private String APP_SHARED_PREFS;
+    AdView mAdView;
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
+
+        initialiseALL();
+        //onCrate
+        updateTime();
+        updateUI();
+        weatherUpdate();
+        addFeature();
+
+    }
+
+    private void initialiseALL() {
         timeTV = findViewById(R.id.TIMETV);
         dayTV = findViewById(R.id.DAYTV);
         dateTV = findViewById(R.id.DATETV);
         Setting = findViewById(R.id.Setting);
         tempTextView = findViewById(R.id.tempTextView);
-
-
         Setting.setOnClickListener(this);
 
         sharedPreferences = Home.this.getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
@@ -84,12 +93,19 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         //location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //onCrate
-        updateTime();
-        updateUI();
-        weatherUpdate();
+    }
 
+    private void addFeature() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
 
+            }
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
 
@@ -114,26 +130,20 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private void timeAndDateHandler() {
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateTime();
-                updateUI();
-                timeAndDateHandler();
-            }
+        handler.postDelayed(() -> {
+            updateTime();
+            updateUI();
+            timeAndDateHandler();
         }, 5000);
     }
 
     private void whetherHandler() {
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                weatherUpdate();
-                whetherHandler();
-                //SET TEMP TO LAYOUT
+        handler.postDelayed(() -> {
+            weatherUpdate();
+            whetherHandler();
+            //SET TEMP TO LAYOUT
 
-            }
         }, 3600000);
 
     }
@@ -144,25 +154,19 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
         }
         fusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            currentLatitude = location.getLatitude();
-                            currentLongitude = location.getLongitude();
-                            Log.e("lastCurrentLatitude", String.valueOf(currentLatitude));
-                            Log.e("lastCurrentLongitude", String.valueOf(currentLongitude));
-                            wheatherApi(currentLatitude, currentLongitude);
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        currentLatitude = location.getLatitude();
+                        currentLongitude = location.getLongitude();
+                        Log.e("lastCurrentLatitude", String.valueOf(currentLatitude));
+                        Log.e("lastCurrentLongitude", String.valueOf(currentLongitude));
+                        wheatherApi(currentLatitude, currentLongitude);
 
-                        } else {
-                            Toast.makeText(Home.this, "Error getting location", Toast.LENGTH_SHORT).show();
-                        }
+                    } else {
+                        Toast.makeText(Home.this, "Error getting location", Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
+                }).addOnFailureListener(e -> {
+            Log.e("Weather API ", "onFailure: " + e.getLocalizedMessage());
         });
 
     }
@@ -281,22 +285,18 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 final AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 Switch weatherSwitch = v.findViewById(R.id.weatherSwitch);
-
                 weatherSwitch.setChecked(sharedPreferences.getString("weather", "").equals("on"));
-
                 weatherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
                             if (ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
-                                alertDialog.dismiss();
                             } else {
                                 editor.clear();
                                 editor.putString("weather", "on");
                                 editor.apply();
                                 getLocation();
-                                alertDialog.dismiss();
                             }
 
 
@@ -305,8 +305,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                             editor.clear();
                             editor.putString("weather", "off");
                             editor.apply();
-                            alertDialog.dismiss();
                         }
+                        alertDialog.dismiss();
                     }
                 });
 
