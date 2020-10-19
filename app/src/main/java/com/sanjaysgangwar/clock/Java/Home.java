@@ -282,11 +282,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 alertDialog.show();
                 Switch weatherSwitch = v.findViewById(R.id.weatherSwitch);
 
-                if ((sharedPreferences.getString("weather", "").equals("on"))) {
-                    weatherSwitch.setChecked(true);
-                } else {
-                    weatherSwitch.setChecked(false);
-                }
+                weatherSwitch.setChecked(sharedPreferences.getString("weather", "").equals("on"));
 
                 weatherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -298,7 +294,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                             } else {
                                 editor.clear();
                                 editor.putString("weather", "on");
-                                editor.commit();
+                                editor.apply();
                                 getLocation();
                                 alertDialog.dismiss();
                             }
@@ -308,7 +304,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                             tempTextView.setVisibility(View.INVISIBLE);
                             editor.clear();
                             editor.putString("weather", "off");
-                            editor.commit();
+                            editor.apply();
                             alertDialog.dismiss();
                         }
                     }
@@ -323,13 +319,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 10:
+        if (requestCode == 10) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 editor.clear();
                 editor.putString("weather", "on");
-                editor.commit();
+                editor.apply();
                 getLocation();
-                break;
+            }
         }
+
     }
 }
