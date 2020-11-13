@@ -21,11 +21,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.sanjaysgangwar.clock.R;
@@ -50,7 +45,7 @@ import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
 public class Home extends AppCompatActivity implements View.OnClickListener {
-    TextView timeTV, dayTV, dateTV, tempTextView;
+    TextView hrsTV, dayTV, dateTV, tempTextView, SecTv, am_pm_Tv, minTV;
     String DAY = null;
     int temp;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -58,10 +53,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     double currentLatitude;
     String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
     ImageView Setting;
+    Switch weatherSwitch, SecondsSwitch, am_pm_switch;
+    AppSharePreference appSharePreference;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private String APP_SHARED_PREFS;
-    AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,50 +70,46 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         updateTime();
         updateUI();
         weatherUpdate();
-        addFeature();
+        CheckForBoth();
 
     }
 
     private void initialiseALL() {
-        timeTV = findViewById(R.id.TIMETV);
+        hrsTV = findViewById(R.id.hrsTV);
         dayTV = findViewById(R.id.DAYTV);
         dateTV = findViewById(R.id.DATETV);
         Setting = findViewById(R.id.Setting);
         tempTextView = findViewById(R.id.tempTextView);
+        am_pm_Tv = findViewById(R.id.am_pm_Tv);
+        SecTv = findViewById(R.id.SecTv);
+        minTV = findViewById(R.id.minTV);
         Setting.setOnClickListener(this);
-
+        appSharePreference = new AppSharePreference(this);
         sharedPreferences = Home.this.getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         APP_SHARED_PREFS = "DeskClock";
 
         //location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (appSharePreference.getAmPm().equals("on")) {
+            am_pm_Tv.setVisibility(View.VISIBLE);
+        }
+        if (appSharePreference.getSeconds().equals("on")) {
+            SecTv.setVisibility(View.VISIBLE);
+        }
 
-    }
-
-    private void addFeature() {
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-
-            }
-        });
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
 
     private void weatherUpdate() {
-        if ((sharedPreferences.getString("weather", "").equals("on"))) {
+        if (appSharePreference.getWeather().equals("on")) {
             if (NetworkUtil.isOnline(this)) {
                 getLocation();
             } else {
                 Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show();
             }
         } else {
-            tempTextView.setVisibility(View.INVISIBLE);
+            tempTextView.setVisibility(View.GONE);
         }
     }
 
@@ -134,7 +126,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             updateTime();
             updateUI();
             timeAndDateHandler();
-        }, 5000);
+        }, 1000);
     }
 
     private void whetherHandler() {
@@ -250,11 +242,19 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
 
         }
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat timeFormatter = new SimpleDateFormat("hh : mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat hrs = new SimpleDateFormat("hh");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat min = new SimpleDateFormat("mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sec = new SimpleDateFormat("ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat am_pm = new SimpleDateFormat("aa");
 
-        timeTV.setText(timeFormatter.format(date));
+
         dateTV.setText(formatter.format(date));
         dayTV.setText(DAY);
+        hrsTV.setText(hrs.format(date) + " : ");
+        minTV.setText(min.format(date));
+        SecTv.setText(" : " + sec.format(date));
+        am_pm_Tv.setText("  " + am_pm.format(date));
+
 
     }
 
@@ -279,13 +279,20 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.Setting:
+                CheckForBoth();
                 AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
                 View v = getLayoutInflater().inflate(R.layout.setting_dialog, null);
                 builder.setView(v);
                 final AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-                Switch weatherSwitch = v.findViewById(R.id.weatherSwitch);
-                weatherSwitch.setChecked(sharedPreferences.getString("weather", "").equals("on"));
+                weatherSwitch = v.findViewById(R.id.weatherSwitch);
+                am_pm_switch = v.findViewById(R.id.am_pm_switch);
+                SecondsSwitch = v.findViewById(R.id.SecondsSwitch);
+
+                weatherSwitch.setChecked(appSharePreference.getWeather().equals("on"));
+                SecondsSwitch.setChecked(appSharePreference.getSeconds().equals("on"));
+                am_pm_switch.setChecked(appSharePreference.getAmPm().equals("on"));
+
                 weatherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -293,27 +300,66 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                             if (ActivityCompat.checkSelfPermission(Home.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
                             } else {
-                                editor.clear();
+                                appSharePreference.setWeather("on");
+                               /* editor.clear();
                                 editor.putString("weather", "on");
-                                editor.apply();
+                                editor.apply();*/
                                 getLocation();
                             }
 
 
                         } else {
-                            tempTextView.setVisibility(View.INVISIBLE);
-                            editor.clear();
-                            editor.putString("weather", "off");
-                            editor.apply();
+                            tempTextView.setVisibility(View.GONE);
+                            CheckForBoth();
+                            appSharePreference.setWeather("off");
+                           /* editor.putString("weather", "off");
+                            editor.apply();*/
                         }
                         alertDialog.dismiss();
                     }
                 });
+                am_pm_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            appSharePreference.setAmPm("on");
+                            /*editor.putString("am_pm", "on");
+                            editor.apply();*/
+                            am_pm_Tv.setVisibility(View.VISIBLE);
+                        } else {
+                            appSharePreference.setAmPm("off");
 
+                            am_pm_Tv.setVisibility(View.GONE);
+                            CheckForBoth();
+                           /* editor.putString("am_pm", "off");
+                            editor.apply();*/
+                        }
+                    }
+                });
+                SecondsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            SecTv.setVisibility(View.VISIBLE);
+                            appSharePreference.setSeconds("on");
+                        } else {
+                            SecTv.setVisibility(View.GONE);
+                            appSharePreference.setSeconds("off");
+                            CheckForBoth();
+                        }
+                    }
+                });
                 break;
 
         }
 
+    }
+
+    private void CheckForBoth() {
+        if (!appSharePreference.getSeconds().equals("on") && !appSharePreference.getAmPm().equals("on")) {
+            SecTv.setVisibility(View.GONE);
+            am_pm_Tv.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -321,9 +367,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 10) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                editor.clear();
-                editor.putString("weather", "on");
-                editor.apply();
+                appSharePreference.setWeather("on");
+               /* editor.putString("weather", "on");
+                editor.apply();*/
                 getLocation();
             }
         }

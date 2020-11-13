@@ -1,6 +1,5 @@
 <?xml version = "1.0" encoding = "utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,7 +22,7 @@
             android:layout_gravity="right|center_vertical"
             android:gravity="right|center_vertical"
             android:paddingRight="15dp"
-            android:text="50o c"
+            android:text="50 c"
             android:textColor="@android:color/white"
             android:textSize="35sp"
             android:textStyle="bold"
@@ -42,16 +41,71 @@
         android:orientation="vertical">
 
 
-        <TextView
-            android:id="@+id/TIMETV"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="88:99"
-            android:textColor="@android:color/white"
-            android:textSize="100sp"
-            android:textStyle="bold"
-            app:fontFamily="@font/orbitron_black" />
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/hrsTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="88 :"
+                android:textColor="@android:color/white"
+                android:textSize="80sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/orbitron_black" />
+
+            <TextView
+                android:id="@+id/minTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=" 99"
+                android:textColor="@android:color/white"
+                android:textSize="80sp"
+                android:textStyle="bold"
+                app:fontFamily="@font/orbitron_black" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/am_pm_Tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:text="  AM"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="invisible"
+                    app:fontFamily="@font/orbitron_black" />
+
+                <TextView
+                    android:id="@+id/SecTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:text=": 99"
+                    android:textColor="@android:color/white"
+                    android:textSize="50sp"
+                    android:textStyle="bold"
+                    android:visibility="invisible"
+                    app:fontFamily="@font/orbitron_black" />
+            </LinearLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,12 +118,10 @@
                 android:id="@+id/DAYTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:text="Thurs"
                 android:textColor="@android:color/white"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
 
@@ -77,12 +129,13 @@
                 android:id="@+id/DATETV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="20dp"
+
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
                 android:gravity="center"
                 android:text="October 55 ,2020"
                 android:textColor="@android:color/white"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
         </LinearLayout>
@@ -107,17 +160,6 @@
             app:srcCompat="@drawable/ic_baseline_settings_24"
             tools:ignore="VectorDrawableCompat" />
 
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="8"
-            android:foregroundGravity="center"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/bannerOne">
-
-        </com.google.android.gms.ads.AdView>
 
     </LinearLayout>
 
