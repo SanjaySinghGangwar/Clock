@@ -2,8 +2,6 @@ package com.sanjaysgangwar.clock.Java;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,9 +53,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     ImageView Setting;
     Switch weatherSwitch, SecondsSwitch, am_pm_switch;
     AppSharePreference appSharePreference;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private String APP_SHARED_PREFS;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,9 +81,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         minTV = findViewById(R.id.minTV);
         Setting.setOnClickListener(this);
         appSharePreference = new AppSharePreference(this);
-        sharedPreferences = Home.this.getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        APP_SHARED_PREFS = "DeskClock";
 
         //location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -301,9 +294,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                                 ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 10);
                             } else {
                                 appSharePreference.setWeather("on");
-                               /* editor.clear();
-                                editor.putString("weather", "on");
-                                editor.apply();*/
                                 getLocation();
                             }
 
@@ -312,8 +302,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                             tempTextView.setVisibility(View.GONE);
                             CheckForBoth();
                             appSharePreference.setWeather("off");
-                           /* editor.putString("weather", "off");
-                            editor.apply();*/
+
                         }
                         alertDialog.dismiss();
                     }
@@ -323,16 +312,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             appSharePreference.setAmPm("on");
-                            /*editor.putString("am_pm", "on");
-                            editor.apply();*/
+
                             am_pm_Tv.setVisibility(View.VISIBLE);
                         } else {
                             appSharePreference.setAmPm("off");
 
                             am_pm_Tv.setVisibility(View.GONE);
                             CheckForBoth();
-                           /* editor.putString("am_pm", "off");
-                            editor.apply();*/
+
                         }
                     }
                 });
@@ -368,8 +355,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         if (requestCode == 10) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 appSharePreference.setWeather("on");
-               /* editor.putString("weather", "on");
-                editor.apply();*/
+
                 getLocation();
             }
         }
