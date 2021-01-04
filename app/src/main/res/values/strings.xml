@@ -3,4 +3,7 @@
     <string name="weather">Weather</string>
     <string name="bannerOne">ca-app-pub-9041694244207254/1790805265</string>
     <string name="addMobAddID">ca-app-pub-9041694244207254~6170536035</string>
+    <string name="seconds">Seconds</string>
+    <string name="am_pm">AM/PM</string>
+    <string name="donate">DONATE</string>
 </resources>

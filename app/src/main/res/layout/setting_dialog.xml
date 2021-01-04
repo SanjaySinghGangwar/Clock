@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical">
 
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/weatherSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,19 +15,47 @@
         android:text="@string/weather"
         android:textColor="@android:color/black" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/SecondsSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Seconds"
-        android:textColor="@android:color/black" />
+        android:text="@string/seconds"
+        android:textColor="@android:color/black"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/am_pm_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="AM/PM"
+        android:text="@string/am_pm"
         android:textColor="@android:color/black" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/donate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="18dp"
+            android:text="@string/donate"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:foregroundGravity="center"
+            android:src="@drawable/donate_image" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 </LinearLayout>

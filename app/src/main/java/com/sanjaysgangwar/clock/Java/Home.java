@@ -2,7 +2,9 @@ package com.sanjaysgangwar.clock.Java;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,13 +12,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,8 +54,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     double currentLatitude;
     String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
     ImageView Setting;
-    Switch weatherSwitch, SecondsSwitch, am_pm_switch;
+    SwitchCompat weatherSwitch, SecondsSwitch, am_pm_switch;
     AppSharePreference appSharePreference;
+    LinearLayoutCompat donate;
+    Intent intent;
 
 
     @Override
@@ -278,6 +283,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 builder.setView(v);
                 final AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+                donate = v.findViewById(R.id.donate);
                 weatherSwitch = v.findViewById(R.id.weatherSwitch);
                 am_pm_switch = v.findViewById(R.id.am_pm_switch);
                 SecondsSwitch = v.findViewById(R.id.SecondsSwitch);
@@ -285,6 +291,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 weatherSwitch.setChecked(appSharePreference.getWeather().equals("on"));
                 SecondsSwitch.setChecked(appSharePreference.getSeconds().equals("on"));
                 am_pm_switch.setChecked(appSharePreference.getAmPm().equals("on"));
+                donate.setOnClickListener(donateIntent -> {
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("https://www.buymeacoffee.com/TheAverageGuy"));
+                    intent = Intent.createChooser(intent, "Donate us ♥");
+                    startActivity(intent);
+                });
+
 
                 weatherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
