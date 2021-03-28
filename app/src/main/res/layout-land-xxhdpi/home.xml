@@ -56,7 +56,7 @@
                 android:gravity="center"
                 android:text="88 :"
                 android:textColor="@android:color/white"
-                android:textSize="115sp"
+                android:textSize="105sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
 
@@ -68,7 +68,7 @@
                 android:gravity="center"
                 android:text=" 99"
                 android:textColor="@android:color/white"
-                android:textSize="115sp"
+                android:textSize="105sp"
                 android:textStyle="bold"
                 app:fontFamily="@font/orbitron_black" />
 
@@ -85,7 +85,7 @@
                     android:paddingTop="5dp"
                     android:text="  AM"
                     android:textColor="@android:color/white"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:textStyle="bold"
                     android:visibility="invisible"
                     app:fontFamily="@font/orbitron_black" />
@@ -99,7 +99,7 @@
                     android:gravity="bottom"
                     android:text=": 99"
                     android:textColor="@android:color/white"
-                    android:textSize="50sp"
+                    android:textSize="45sp"
                     android:textStyle="bold"
                     android:visibility="invisible"
                     app:fontFamily="@font/orbitron_black" />
