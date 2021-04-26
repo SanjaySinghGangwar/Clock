@@ -1,4 +1,4 @@
-package com.sanjaysgangwar.clock.api;
+package com.sanjaysgangwar.clock.mRestrofit;
 
 import com.sanjaysgangwar.clock.modelClass.wheatherModel;
 
