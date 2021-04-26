@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Desk Clock</string>
     <string name="weather">Weather</string>
-    <string name="bannerOne">ca-app-pub-9041694244207254/1790805265</string>
-    <string name="addMobAddID">ca-app-pub-9041694244207254~6170536035</string>
+
     <string name="seconds">Seconds</string>
     <string name="am_pm">AM/PM</string>
     <string name="donate">Donate</string>
@@ -11,4 +10,9 @@
     <string name="other_apps">Other Apps</string>
     <string name="share">Share</string>
     <string name="ads">Ads</string>
+
+    //adMob adds
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="bannerOne">ca-app-pub-9041694244207254/1790805265</string>
+    <string name="addMobAddID">ca-app-pub-9041694244207254~6170536035</string>
 </resources>

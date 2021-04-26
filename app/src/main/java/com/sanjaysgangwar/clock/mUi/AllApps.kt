@@ -1,4 +1,4 @@
-package com.sanjaysgangwar.clock.ui
+package com.sanjaysgangwar.clock.mUi
 
 import android.content.Intent
 import android.net.Uri
@@ -25,8 +25,8 @@ class AllApps : AppCompatActivity() {
 
     private lateinit var bind: AllAppsBinding
     private lateinit var myRef: DatabaseReference
-    lateinit var database: FirebaseDatabase
-    var sharedPreferences: AppSharePreference? = null
+    private lateinit var database: FirebaseDatabase
+    private lateinit var sharedPreferences: AppSharePreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

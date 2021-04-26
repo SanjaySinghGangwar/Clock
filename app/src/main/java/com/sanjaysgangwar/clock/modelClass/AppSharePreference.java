@@ -48,7 +48,7 @@ public class AppSharePreference {
     }
 
     public Boolean getAds() {
-        return sharedPreferences.getBoolean("ads", false);
+        return sharedPreferences.getBoolean("ads", true);
     }
 
     public void setAds(Boolean Seconds) {

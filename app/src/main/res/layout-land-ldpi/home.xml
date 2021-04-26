@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/black"
     android:orientation="vertical"
     android:weightSum="10"
-    tools:context=".ui.Home">
+    tools:context=".mUi.Home">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tempTextView"
+            android:id="@+id/temperature"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
@@ -49,7 +50,7 @@
             android:weightSum="10">
 
             <TextView
-                android:id="@+id/hrsTV"
+                android:id="@+id/hours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -61,7 +62,7 @@
                 app:fontFamily="@font/orbitron_black" />
 
             <TextView
-                android:id="@+id/minTV"
+                android:id="@+id/minutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -79,7 +80,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/am_pm_Tv"
+                    android:id="@+id/amPm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
@@ -91,7 +92,7 @@
                     app:fontFamily="@font/orbitron_black" />
 
                 <TextView
-                    android:id="@+id/SecTv"
+                    android:id="@+id/seconds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -115,7 +116,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/DAYTV"
+                android:id="@+id/day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -126,7 +127,7 @@
                 app:fontFamily="@font/orbitron_black" />
 
             <TextView
-                android:id="@+id/DATETV"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -151,7 +152,7 @@
         android:weightSum="10">
 
         <ImageView
-            android:id="@+id/Setting"
+            android:id="@+id/setting"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
@@ -160,6 +161,15 @@
             app:srcCompat="@drawable/ic_baseline_settings_24"
             tools:ignore="VectorDrawableCompat" />
 
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="8"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
 
     </LinearLayout>
 

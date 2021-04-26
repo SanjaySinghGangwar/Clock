@@ -11,14 +11,14 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
-
         android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.Home"
+            android:name=".mUi.Home"
             android:hardwareAccelerated="true"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AllApps" />
+        <activity android:name=".mUi.AllApps" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

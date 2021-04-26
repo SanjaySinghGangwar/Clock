@@ -1,4 +1,4 @@
-package com.sanjaysgangwar.clock.ui;
+package com.sanjaysgangwar.clock.mUi;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +20,10 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.sanjaysgangwar.clock.R;
@@ -49,14 +51,10 @@ import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 public class Home extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
-    TextView hrsTV, dayTV, dateTV, tempTextView, SecTv, am_pm_Tv, minTV;
     String DAY = null;
     int temp;
     FusedLocationProviderClient fusedLocationProviderClient;
-    double currentLongitude;
-    double currentLatitude;
     String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
-    ImageView Setting;
     SwitchCompat weatherSwitch, SecondsSwitch, am_pm_switch, Ads;
     AppSharePreference appSharePreference;
     LinearLayoutCompat donate, OtherApps, Share;
@@ -66,7 +64,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
     AlertDialog alertDialog;
     ApiInterface apiInterface;
     private HomeBinding bind;
-
+    AdRequest adRequest;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +78,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         weatherUpdate();
 
         UpdateUIForSwitches();
+        if (appSharePreference.getAds()) {
+            checkForAds();
+        }
 
+    }
+
+    private void checkForAds() {
+        bind.adView.loadAd(adRequest);
     }
 
 
@@ -92,15 +97,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         builder.setView(v);
         alertDialog = builder.create();
 
-        //IDS
-        hrsTV = findViewById(R.id.hrsTV);
-        dayTV = findViewById(R.id.DAYTV);
-        dateTV = findViewById(R.id.DATETV);
-        Setting = findViewById(R.id.Setting);
-        tempTextView = findViewById(R.id.tempTextView);
-        am_pm_Tv = findViewById(R.id.am_pm_Tv);
-        SecTv = findViewById(R.id.SecTv);
-        minTV = findViewById(R.id.minTV);
 
         //dialog ids
         weatherSwitch = v.findViewById(R.id.weatherSwitch);
@@ -113,7 +109,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
 
 
         //Listener
-        Setting.setOnClickListener(this);
+        bind.setting.setOnClickListener(this);
         weatherSwitch.setOnCheckedChangeListener(this);
         am_pm_switch.setOnCheckedChangeListener(this);
         SecondsSwitch.setOnCheckedChangeListener(this);
@@ -129,6 +125,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         apiInterface = ApiClient.getClient(Home.this).create(ApiInterface.class);
 
+        //ads
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        adRequest = new AdRequest.Builder().build();
+
     }
 
 
@@ -136,7 +141,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         if (appSharePreference.getWeather()) {
             getLocation();
         } else {
-            tempTextView.setVisibility(View.GONE);
+            bind.temperature.setVisibility(View.GONE);
         }
     }
 
@@ -173,9 +178,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
             fusedLocationProviderClient.getLastLocation()
                     .addOnSuccessListener(location -> {
                         if (location != null) {
-                            wheatherApi(location.getLatitude(), location.getLongitude());
+                            weatherApi(location.getLatitude(), location.getLongitude());
                         } else {
-                            tempTextView.setVisibility(View.GONE);
+                            bind.temperature.setVisibility(View.GONE);
                             Toast.makeText(Home.this, "Error getting location 💤", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(e -> {
@@ -184,7 +189,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         }
     }
 
-    private void wheatherApi(Double currentLatitude, Double currentLongitude) {
+    private void weatherApi(Double currentLatitude, Double currentLongitude) {
         if (NetworkUtil.isOnline(this)) {
             Call<wheatherModel> call = apiInterface.getWeather(currentLatitude, currentLongitude, weatherKey);
             call.enqueue(new Callback<wheatherModel>() {
@@ -192,9 +197,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
                 public void onResponse(Call<wheatherModel> call, Response<wheatherModel> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
-                            tempTextView.setVisibility(View.VISIBLE);
+                            bind.temperature.setVisibility(View.VISIBLE);
                             temp = (int) (response.body().getMain().getTemp() - 273.15);
-                            tempTextView.setText(temp + "°C");
+                            bind.temperature.setText(temp + "°C");
                         }
                     }
 
@@ -267,32 +272,23 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         @SuppressLint("SimpleDateFormat") SimpleDateFormat am_pm = new SimpleDateFormat("aa");
 
 
-        dateTV.setText(formatter.format(date));
-        dayTV.setText(DAY);
-        hrsTV.setText(hrs.format(date) + " : ");
-        minTV.setText(min.format(date));
-        SecTv.setText(" : " + sec.format(date));
-        am_pm_Tv.setText("  " + am_pm.format(date));
+        bind.date.setText(formatter.format(date));
+        bind.day.setText(DAY);
+        bind.hours.setText(hrs.format(date) + " : ");
+        bind.minutes.setText(min.format(date));
+        bind.seconds.setText(" : " + sec.format(date));
+        bind.amPm.setText("  " + am_pm.format(date));
 
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.Setting:
+            case R.id.setting:
                 switches();
+                alertDialog.setCancelable(true);
                 alertDialog.show();
                 break;
             case R.id.share:
@@ -305,8 +301,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
                 break;
             case R.id.otherApps:
                 DismissDialog();
-                Intent intent = new Intent(this, AllApps.class);
-                startActivity(intent);
+                Intent i = new Intent(this, AllApps.class);
+                startActivity(i);
                 break;
             case R.id.donate:
                 intent = new Intent();
@@ -346,34 +342,37 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
                         getLocation();
                     }
                 } else {
-                    tempTextView.setVisibility(View.GONE);
+                    bind.temperature.setVisibility(View.GONE);
                     appSharePreference.setWeather(false);
                 }
-                DismissDialog();
                 break;
             case R.id.am_pm_switch:
                 if (isChecked) {
                     appSharePreference.setAmPm(true);
-                    am_pm_Tv.setVisibility(View.VISIBLE);
+                    bind.amPm.setVisibility(View.VISIBLE);
                 } else {
                     appSharePreference.setAmPm(false);
-                    am_pm_Tv.setVisibility(View.GONE);
+                    bind.amPm.setVisibility(View.GONE);
                 }
-                DismissDialog();
                 break;
             case R.id.SecondsSwitch:
                 if (isChecked) {
-                    SecTv.setVisibility(View.VISIBLE);
+                    bind.seconds.setVisibility(View.VISIBLE);
                     appSharePreference.setSeconds(true);
                 } else {
-                    SecTv.setVisibility(View.GONE);
+                    bind.seconds.setVisibility(View.GONE);
                     appSharePreference.setSeconds(false);
                 }
-                DismissDialog();
                 break;
             case R.id.ads:
-                appSharePreference.setAds(isChecked);
-                DismissDialog();
+                if (isChecked) {
+                    bind.adView.setVisibility(View.VISIBLE);
+                    checkForAds();
+                    appSharePreference.setAds(true);
+                } else {
+                    bind.adView.setVisibility(View.GONE);
+                    appSharePreference.setAds(false);
+                }
                 break;
         }
     }
@@ -387,13 +386,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
 
     private void UpdateUIForSwitches() {
         if (appSharePreference.getAmPm()) {
-            am_pm_Tv.setVisibility(View.VISIBLE);
+            bind.amPm.setVisibility(View.VISIBLE);
         }
         if (appSharePreference.getSeconds()) {
-            SecTv.setVisibility(View.VISIBLE);
+            bind.seconds.setVisibility(View.VISIBLE);
         }
         if (appSharePreference.getWeather()) {
-            tempTextView.setVisibility(View.VISIBLE);
+            bind.temperature.setVisibility(View.VISIBLE);
         }
     }
 
