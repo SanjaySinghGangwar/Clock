@@ -46,6 +46,7 @@ import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
 public class Home extends AppCompatActivity implements View.OnClickListener {
+
     TextView hrsTV, dayTV, dateTV, tempTextView, SecTv, am_pm_Tv, minTV;
     String DAY = null;
     int temp;
