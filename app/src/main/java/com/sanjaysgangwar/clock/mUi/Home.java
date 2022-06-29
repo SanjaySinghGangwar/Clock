@@ -54,7 +54,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
     String DAY = null;
     int temp;
     FusedLocationProviderClient fusedLocationProviderClient;
-    String weatherKey = "2e3e87023a31a19d056c76e35a48a178";
+    String weatherKey = "Add Api key here";
     SwitchCompat weatherSwitch, SecondsSwitch, am_pm_switch, Ads;
     AppSharePreference appSharePreference;
     LinearLayoutCompat donate, OtherApps, Share;
